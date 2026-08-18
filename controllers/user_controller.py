@@ -48,12 +48,21 @@ def get_user_by_id(user_id):
 def update_user(user_id):
     data = request.get_json()
 
+    if not data:
+        return jsonify({"error": "Os dados do usuário são obrigatórios"}), 400
+
+    if not data.get("nome"):
+        return jsonify({"error": "O campo nome é obrigatório"}), 400
+
+    if not data.get("email"):
+        return jsonify({"error": "O campo email é obrigatório"}), 400
+
     for user in user_data.users:
         if user["id"] == user_id:
-            user["nome"] = data.get("nome", user["nome"])
-            user["email"] = data.get("email", user["email"])
+            user["nome"] = data["nome"]
+            user["email"] = data["email"]
 
-            return jsonify(user), 200
+            return jsonify({"data": user}), 200
 
     return jsonify({"error": "Usuário não encontrado"}), 404
 
